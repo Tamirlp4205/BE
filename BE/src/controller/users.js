@@ -1,4 +1,5 @@
 import {db} from "../../db.js"
+import bcrypt from "bcrypt";
 
 export  const getUsers =  async (req, res) => {
     const queryText = "SELECT * FROM users";
@@ -11,15 +12,19 @@ export  const getUsers =  async (req, res) => {
     }
   };
   
-  export  const createUser =  async (req, res) => {
+  export const createUser = async (req, res) => {
     const { email, name, password, avatar_image, currency_type } = req.body;
-    const queryText = `INSERT INTO users (email, name, password, avatar_image, currency_type) VALUES ($1, $2, $3, $4, $5) RETURNING *`;
   
     try {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const queryText = `
+        INSERT INTO users (email, name, password, avatar_image, currency_type)
+        VALUES ($1, $2, $3, $4, $5)
+        RETURNING *`;
       const result = await db.query(queryText, [
         email,
         name,
-        password,
+        hashedPassword, 
         avatar_image,
         currency_type,
       ]);
@@ -46,11 +51,11 @@ export  const getUsers =  async (req, res) => {
     const { email } = req.body;
   
     const queryText = `
-      SELECT email, password FROM "user" WHERE email = $1
+      SELECT email, password FROM users WHERE email = $1
       `;
     try {
       const result = await db.query(queryText, [email]);
-      return result.rows;
+      return result.rows[0];
     } catch (error) {
       console.log(error);
     }
