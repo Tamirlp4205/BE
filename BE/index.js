@@ -7,7 +7,7 @@ import { category } from "./src/routes/category.js";
 import {auth} from "./src/routes/auth.js"
 
 const app = express();
-const port = 8000;
+const port = 8000; // procees.env.PORT
 
 app.use(express.json());
 app.use(cors());
@@ -50,21 +50,20 @@ app.get("/createTable", async (req, res) => {
 
 app.get("/createRecord", async (req, res) => {
   const TableQueryText = `
-  CREATE TABLE IF NOT EXISTS record (
+ CREATE TABLE "record" (
     id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-    users_id uuid NOT NULL   uuid REFERENCES users ON DELETED  RESTRICT ,
+    users_id uuid NOT NULL,
     category_id uuid NOT NULL,
     FOREIGN KEY (users_id)
-    references "users"(id),
+    references users(id),
     FOREIGN KEY (category_id)
-    references "category"(id),
+    references category(id),
     name TEXT,
     amount REAL NOT NULL,
     transaction_type transaction_type DEFAULT 'EXP' NOT NULL,
     description TEXT,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-  );`;
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP);`;
   try {
     await db.query(TableQueryText);
     res.send("Table created successfully");
