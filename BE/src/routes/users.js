@@ -4,7 +4,8 @@ import {
   createUser,
   updateUser,
   deleteUser,
-  singleUser
+  
+  filterUser
 } from "../controller/users.js";
 
 const users = express.Router();
@@ -14,6 +15,7 @@ users
   .post("/create", createUser)
   .put("/:id", updateUser)
   .delete("/:id", deleteUser)
-  .get("/:id" , singleUser)
+  // .get("/:id" , singleUser)
+  .get("/filteruser" , filterUser )
 
 export  { users };

@@ -10,7 +10,25 @@ export const getRecord = async (req, res) => {
     res.status(500).json({ error: "Database error" });
   }
 };
+export const filterRecord = async (req, res) => {
+  let body = req.body;
+  const { query } = body;
+  delete body.query;
+  let queryText = "SELECT * FROM record"; 
 
+  queryText = queryText + query;
+  try {
+    const result = await db.query(queryText, [...Object.values(body)]);
+    if (result.rows.length === 0) {
+      res.status(404).json({ error: "R`ecord not found" });
+    } else {
+      res.status(200).json(result.rows[0]);
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Database error" });
+  }
+};
 export const createRecord = async (req, res) => {
   const { users_id, name, amount, transaction_type, description, category_id } =
     req.body;

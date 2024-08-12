@@ -1,19 +1,5 @@
 import bcrypt from "bcrypt";
 import {db} from "../../db.js"
- 
- const getUserEmail = async (req, res) => {
-  const { email } = req.body;
-
-  const queryText = `
-    SELECT email, password FROM users WHERE email = $1
-    `;
-  try {
-    const result = await db.query(queryText, [email]);
-    return result.rows[0];
-  } catch (error) {
-    console.log(error);
-  }
-};
 
  const createUser = async (req, res) => {
   const { email, name, password, avatar_image, currency_type } = req.body;

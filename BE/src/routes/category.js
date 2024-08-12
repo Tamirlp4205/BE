@@ -3,7 +3,8 @@ import {
     getCategory,
   createCategory ,
   updateCategory,
-  deleteCategory
+  deleteCategory,
+  filterCategory
 } from "../controller/category.js";
 
 const category = express.Router();
@@ -12,6 +13,7 @@ category
   .get("/", getCategory)
   .post("/create", createCategory)
   .put("/:id", updateCategory)
-  .delete("/:id", deleteCategory);
+  .delete("/:id", deleteCategory)
+  .get("/filterCategory" , filterCategory)
 
 export { category };

@@ -75,18 +75,37 @@ export  const getUsers =  async (req, res) => {
     }
   };
 
-  export const singleUser = async (req, res) => {
-    const { id } = req.params;
-    const queryText = "SELECT * FROM users WHERE id = $1";
+  // export const singleUser = async (req, res) => {
+  //   const { id } = req.params;
+  //   const queryText = "SELECT * FROM users WHERE id = $1";
+  //   try {
+  //     const result = await db.query(queryText, [id]);
+  //     if (result.rows.length === 0) {
+  //       res.status(404).json({ error: "User not found" });
+  //     } else {
+  //       res.status(200).json(result.rows[0]);
+  //     }
+  //   } catch (err) {
+  //     console.error(err);
+  //     res.status(500).json({ error: "Database error" });
+  //   }
+  // };
+  export const filterUser = async (req, res) => {
+    let body = req.body;
+    let {query} = body ;
+    delete body.query ;
+    
+    let queryText = ` SELECT * FROM users `;
+    queryText =queryText + query
     try {
-      const result = await db.query(queryText, [id]);
-      if (result.rows.length === 0) {
-        res.status(404).json({ error: "User not found" });
-      } else {
-        res.status(200).json(result.rows[0]);
-      }
+        const result = await db.query(queryText, [...Object.values(body)]);
+        if (result.rows.length === 0) {
+            res.status(404).json({ error: "User not found" });
+        } else {
+            res.status(200).json(result.rows[0]);
+        }
     } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: "Database error" });
+        console.error(err);
+        res.status(500).json({ error: "Database error" });
     }
-  };
+};

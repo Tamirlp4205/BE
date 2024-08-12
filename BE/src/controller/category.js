@@ -1,5 +1,24 @@
 import {db} from "../../db.js"
 
+
+export const filterCategory = async (req, res) => {
+  let body = req.body;
+  const { query } = body;
+  delete body.query;
+  let queryText = "SELECT * FROM category";
+  queryText = queryText + query;
+  try {
+    const result = await db.query(queryText, [...Object.values(body)]);
+    if (result.rows.length === 0) {
+      res.status(404).json({ error: "Category not found" });
+    } else {
+      res.status(200).json(result.rows[0]);
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Database error" });
+  }
+};
 export const createCategory = async (req, res) => {
   const { category_image, name,  description} = req.body;
   const queryText = `INSERT INTO category (name,   description, category_image) VALUES ($1, $2, $3) RETURNING *`;
