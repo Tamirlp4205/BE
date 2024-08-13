@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { LogoIcon } from "@/assets/logo";
 import Link from 'next/link'
 
-const signUp = () => {
+const SignUp = () => {
   return (
     <div className="grid w-full h-screen grid-cols-2 ">
       <div className="flex flex-col items-center justify-center gap-10">
@@ -38,4 +38,4 @@ const signUp = () => {
   );
 };
 
-export default signUp;
+export default SignUp;
