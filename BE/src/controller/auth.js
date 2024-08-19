@@ -1,65 +1,29 @@
-import bcrypt from "bcrypt";
-import {db} from "../../db.js"
+import bcrypt from 'bcrypt';
+import { createUser, getUserByEmail } from './Users.js';
 
- const createUser = async (req, res) => {
-  const { email, name, password, avatar_image, currency_type } = req.body;
-
+export const Signup = async (req, res) => {
   try {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const queryText = `
-      INSERT INTO users (email, name, password, avatar_image, currency_type)
-      VALUES ($1, $2, $3, $4, $5)
-      RETURNING *`;
-    const result = await db.query(queryText, [
-      email,
-      name,
-      hashedPassword, 
-      avatar_image,
-      currency_type,
-    ]);
-    res.status(201).json(result.rows[0]);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Database error" });
+    await createUser(req, res);
+  } catch (error) {
+    return res.send(error);
   }
 };
 
-export const signUp = async (req, res) => {
+export const Login = async (req, res) => {
+  const { email, password } = req.body;
   try {
-    const user = await createUser(req, res);
-    res.status(200).json({ success: true, user: user });
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ error: "Database error" });
-  }
-};
-
-
-
-export const signIn = async (req, res) => {
-  const { password, email } = req.body;
-
-  try {
-    const queryText = `
-      SELECT * FROM "users" WHERE email = $1
-    `;
-    const users = await db.query(queryText, [email]);
-
-    if (users.rows.length === 0) {
-      return res.status(400).send({ error: "Invalid email or password" });
+    const user = await getUserByEmail(email);
+    if (!user) {
+      return res.status(401).send({ error: 'Invalid email or password' });
     }
 
-    const isMatch = await bcrypt.compare(password, users.rows[0].password);
-
-    if (isMatch) {
-      res.send({ success: true, users: users.rows[0] });
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    if (isPasswordCorrect) {
+      return res.send({ success: true, user });
     } else {
-      res.status(400).send({ error: "Invalid email or password" });
+      return res.status(401).send({ error: 'Invalid email or password' });
     }
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ error: "Database error" });
+  } catch (error) {
+    return res.status(500).send({ error: 'Failed to authenticate user' });
   }
 };
-
-

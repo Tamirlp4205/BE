@@ -1,99 +1,88 @@
-import express, { application } from "express";
-import cors from "cors";
-import { db } from "./db.js";
-import {users} from "./src/routes/users.js"
-import {record} from "./src/routes/record.js"
-import { category } from "./src/routes/category.js";
-import {auth} from "./src/routes/auth.js"
+import bodyParser from "body-parser"
+import express from "express"
+import cors from 'cors'
+import { db } from './db.js'
+import { user } from './src/router/user.js'
+import { record } from './src/router/record.js'
+import { category } from './src/router/category.js'
+import { auth} from './src/router/auth.js'
 
-const app = express();
-const port = 8000; // procees.env.PORT
+const app = express()
+const PORT = process.env.PORT;
 
-app.use(express.json());
-app.use(cors());
-app.use('/users' , users) ;
-app.use('/record' , record) ;
-app.use('/category' , category) ;
-app.use('/api' , auth) ;
+app.use(bodyParser.json())
+app.use(cors())
 
-app.get("/installExtension", async (req, res) => {
-  const TableQueryText = `CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`;
-  try {
-    await db.query(TableQueryText);
-    res.send("Extension installed successfully");
-  } catch (error) {
-    console.log(error);
-    res.status(500).send(error.message);
-  }
-});
+app.use('/user',user)
+app.use('/record',record)
+app.use('/category',category)
+app.use('/api',auth)
 
-app.get("/createTable", async (req, res) => {
-  const TableQueryText = `
-  CREATE TABLE IF NOT EXISTS users (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    email VARCHAR(50) UNIQUE NOT NULL,
-    name VARCHAR(50) NOT NULL,
+
+app.get('/createTable',async (req,res)=>{
+   const tableQueryText = `  
+   CREATE TABLE IF NOT EXISTS "users" (
+    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name VARCHAR(50)  NOT NULL,
+    email VARCHAR(50) UNIQUE NOT NULL, 
     password TEXT,
-    avatar_image TEXT,
+    avatar_img BYTEA,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    currency_type VARCHAR(3) DEFAULT 'USD' NOT NULL
-  );`;
+    currency_type currency_type DEFAULT 'MNT' 
+  )
+`;
   try {
-    await db.query(TableQueryText);
-    res.send("Table created successfully");
+    await db.query(tableQueryText)
   } catch (error) {
-    console.log(error);
-    res.status(500).send(error.message);
+        return res.send(error)
   }
-});
-
-app.get("/createRecord", async (req, res) => {
-  const TableQueryText = `
- CREATE TABLE "record" (
+return res.send('CREATED USERS TABLE')
+})
+app.get('/recordTable',async (req,res)=>{
+   const tableQueryText = `  
+   CREATE TABLE IF NOT EXISTS "records" (
     id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-    users_id uuid NOT NULL,
-    category_id uuid NOT NULL,
-    FOREIGN KEY (users_id)
-    references users(id),
-    FOREIGN KEY (category_id)
-    references category(id),
-    name TEXT,
-    amount REAL NOT NULL,
-    transaction_type transaction_type DEFAULT 'EXP' NOT NULL,
+    user_id uuid,
+    name VARCHAR(50)  NOT NULL,
+    amount REAL NOT NULL, 
+    transaction_type transaction_type DEFAULT 'INC' NOT NULL,
     description TEXT,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP);`;
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    category_id uuid,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (category_id) REFERENCES category(id) ON DELETE CASCADE
+  )
+`;
   try {
-    await db.query(TableQueryText);
-    res.send("Table created successfully");
+    await db.query(tableQueryText)
   } catch (error) {
-    console.log(error);
-    res.status(500).send(error.message);
+        return res.send(error)
   }
-});
+return res.send('CREATED RECORDS TABLE')
+})
 
-app.get("/createCategory", async (req, res) => {
-  const TableQueryText = `
-   CREATE TABLE IF NOT EXISTS category (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    email VARCHAR(50) UNIQUE NOT NULL,
-    name VARCHAR(50) NOT NULL,
+app.get('/categoryTable',async (req,res)=>{
+   const tableQueryText = `  
+   CREATE TABLE IF NOT EXISTS "category" (
+    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name VARCHAR(50)  NOT NULL,
     description TEXT,
-    avatar_image TEXT,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     category_image TEXT
-  );`;
+  )
+`;
   try {
-    await db.query(TableQueryText);
-    res.send("Table created successfully");
+    await db.query(tableQueryText)
   } catch (error) {
-    console.log(error);
-    res.status(500).send(error.message);
+        return res.send(error)
   }
-});
+return res.send('CREATED CATEGORY TABLE')
+})
 
-app.listen(port, () => {
-  console.log(`my backend listening on port ${port}`);
-});
+
+app.listen(PORT,()=>{
+  console.log(`Port ${PORT}`)
+})
