@@ -1,4 +1,4 @@
-import { db } from '../../db.js';
+import { db } from "../../db.js";
 
 export const createCategory = async (req, res) => {
   const { name, description, category_image } = req.body;
@@ -9,9 +9,11 @@ VALUES ($1,$2,$3) RETURNING *
   try {
     await db.query(tableQueryText, [name, description, category_image]);
   } catch (error) {
+
+    console.log(process.env.NEONDB_CONNECTION_STRING)
     return res.send(error);
   }
-  return res.send('CREATE CATEGORY');
+  return res.send("CREATE CATEGORY");
 };
 export const categories = async (req, res) => {
   const tableQueryText = `

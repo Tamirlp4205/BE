@@ -1,9 +1,9 @@
-import dotenv from 'dotenv'
-import pg from 'pg'
+import dotenv from "dotenv";
+import pg from "pg";
 
-dotenv.config()
+dotenv.config();
 
 export const db = new pg.Pool({
-  ssl:true,
-  connectionString:process.env.NEONDB_CONNECTION_STRING
-})
+  ssl: true,
+  connectionString: process.env.NEONDB_CONNECTION_STRING,
+});

@@ -16,6 +16,9 @@ import {
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import Slider from '@/components/Slider';
+import { Label } from "@/components/ui/label"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+
 
 const categories = [
   { name: 'Food & Drinks', type: 'Expense' },
@@ -40,7 +43,7 @@ const Records = () => {
   return (
     <Layout ChildStyle={true}>
       <Command className="w-[250px] h-[900px] bg-white rounded-[12px] px-4 py-6 flex gap-4 mb-10">
-        <h1 className='font-bold text-2xl'>Records</h1>
+        <h1 className='text-2xl font-bold'>Records</h1>
         <Button className={Style.buttonStyle2}>
           <PlusIcon />
           Add
@@ -51,18 +54,23 @@ const Records = () => {
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
           <CommandGroup heading="Types">
-            <CommandItem onClick={() => setSelectedFilter('All')}>
-              <Checkbox checked={selectedFilter === 'All'} />
-              All
-            </CommandItem>
-            <CommandItem onClick={() => setSelectedFilter('Income')}>
-              <Checkbox checked={selectedFilter === 'Income'} />
-              Income
-            </CommandItem>
-            <CommandItem onClick={() => setSelectedFilter('Expense')}>
-              <Checkbox checked={selectedFilter === 'Expense'} />
-              Expense
-            </CommandItem>
+            <RadioGroup
+              defaultValue="All"
+              onValueChange={(value) => setSelectedFilter(value)}
+            >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="All" />
+                <Label>All</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="Income" />
+                <Label>Income</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="Expense" />
+                <Label>Expense</Label>
+              </div>
+            </RadioGroup>
           </CommandGroup>
           <CommandSeparator />
           <CommandGroup heading="Category">

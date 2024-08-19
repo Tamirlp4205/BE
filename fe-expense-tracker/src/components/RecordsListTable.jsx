@@ -48,31 +48,31 @@ const data = [
   {
     id: 'm5gr84i9',
     amount: 316,
-    status: 'success',
+    category: 'Shopping',
     email: 'ken99@yahoo.com',
   },
   {
     id: '3u1reuv4',
     amount: 242,
-    status: 'success',
+    category: 'Investments',
     email: 'Abe45@gmail.com',
   },
   {
     id: 'derv1ws0',
     amount: 837,
-    status: 'processing',
+    category: 'PC',
     email: 'Monserrat44@gmail.com',
   },
   {
     id: '5kma53ae',
     amount: 874,
-    status: 'success',
+    category: 'Vehicle',
     email: 'Silas22@gmail.com',
   },
   {
     id: 'bhqecj4p',
     amount: 721,
-    status: 'failed',
+    category: 'others',
     email: 'carmella@hotmail.com',
   },
 ];
@@ -94,6 +94,7 @@ export const columns = [
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
+        className="rounded-md"
       />
     ),
     cell: ({ row }) => (
@@ -101,16 +102,17 @@ export const columns = [
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
         aria-label="Select row"
+         className="rounded-md"
       />
     ),
     enableSorting: false,
     enableHiding: false,
   },
   {
-    accessorKey: 'status',
+    accessorKey: 'category',
     header: 'Select All',
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue('status')}</div>
+      <div className="capitalize">{row.getValue('category')}</div>
     ),
   },
   {
@@ -124,7 +126,7 @@ export const columns = [
         currency: 'USD',
       }).format(amount);
 
-      return <div className="text-right font-medium">{formatted}</div>;
+      return <div className="font-medium text-right">{formatted}</div>;
     },
   },
   {
@@ -136,9 +138,9 @@ export const columns = [
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
+            <Button variant="ghost" className="w-8 h-8 p-0">
               <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
+              <MoreHorizontal className="w-4 h-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -186,7 +188,7 @@ export const RecordsListTable = () => {
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
-        <div className="flex gap-4 items-center">
+        <div className="flex items-center gap-4">
           <Button className={styles.arrowButton}>
             <ChevronLeft size={20} />
           </Button>
@@ -198,7 +200,7 @@ export const RecordsListTable = () => {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown className="ml-2 h-4 w-4" />
+             Newest-first <ChevronDown className="w-4 h-4 ml-2" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -222,7 +224,7 @@ export const RecordsListTable = () => {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className="rounded-md border bg-white">
+      <div className="bg-white border rounded-md">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

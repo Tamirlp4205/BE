@@ -5,6 +5,7 @@ import { Button } from './ui/button';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import AvatarImg from "@/assets/placeholder.png"
 const styles = {
   ChildrenStyle: 'flex flex-col gap-6 w-[1200px] h-screen',
   ChildrenStyle2: 'flex flex-row gap-6 w-[1200px] h-full',
@@ -17,9 +18,9 @@ export const Layout = ({ children, ChildStyle = false }) => {
   const router = useRouter();
   return (
     <div className="flex flex-col items-center bg-[#F3F4F6] gap-6">
-      <div className="bg-white flex justify-center w-full">
+      <div className="flex justify-center w-full bg-white">
         <div className="flex justify-between items-center py-[16px] w-[1200px]">
-          <div className="flex items items-center gap-6">
+          <div className="flex items-center gap-6 items">
             <Link href="/dashboard">
               <DashboardLogo />
             </Link>
@@ -39,7 +40,7 @@ export const Layout = ({ children, ChildStyle = false }) => {
             </Button>
             <Image
               className="w-[40px] h-[40px] rounded-full object-cover"
-              src="https://pe-images.s3.amazonaws.com/basics/cc/image-size-resolution/resize-images-for-print/image-cropped-8x10.jpg"
+              src={AvatarImg}
               width={40}
               height={40}
               alt="Avatar"

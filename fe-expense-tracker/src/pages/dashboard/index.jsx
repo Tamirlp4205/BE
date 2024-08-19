@@ -7,7 +7,8 @@ import RecordList from '@/components/RecordList';
 const Dashboard = () => {
   return (
     <Layout>
-      <Cards />
+      <Cards balance={10000000} percent={32} />
+
       <div className="grid grid-cols-2 gap-6 h-[284px]">
         <Chart />
         <PieDashboardChart />

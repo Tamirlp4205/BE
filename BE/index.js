@@ -8,7 +8,7 @@ import { category } from './src/router/category.js'
 import { auth} from './src/router/auth.js'
 
 const app = express()
-const PORT = process.env.PORT;
+const PORT = 8000
 
 app.use(bodyParser.json())
 app.use(cors())
