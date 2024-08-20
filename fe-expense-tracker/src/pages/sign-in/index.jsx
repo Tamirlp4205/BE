@@ -2,8 +2,9 @@ import { LogoIcon } from '@/components/icon/logoIcon';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/router';
-import React, { useRef, useState } from 'react';
+import { useRef } from 'react';
 import axios from 'axios';
+
 const styles = {
   container: 'grid grid-cols-2 w-full h-screen',
   contentContainer: 'flex flex-col justify-center items-center gap-10',
@@ -16,51 +17,43 @@ const styles = {
   bottomTextContainer: 'flex items-center',
   routerButton: 'bg-white text-[#0166FF] hover:bg-white',
 };
+
 const SigninPage = () => {
-  const [error, setError] = useState('');
   const router = useRouter();
-  const BASE_URL = 'http://localhost:8000';
   const formRef = useRef(null);
+
   const onSubmit = async (event) => {
     event.preventDefault();
-    const { data } = await axios.post(BASE_URL + '/api/signin', {
-      email: formRef.current[0].value,
-      password: formRef.current[1].value,
-    });
-    if (data.success === true) {
+    const formData = new FormData(formRef.current);
+    const { email, password } = Object.fromEntries(formData);
+    console.log(email, password);
+    try {
+      const response = await axios.post('http://localhost:8000/api/login', { email, password });
+      console.log(response);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
       router.push('/dashboard');
-    } else {
-      setError('Email or Password Wrong');
+    } catch (error) {
+      console.error('Login error:', error);
     }
   };
+
   return (
     <div className={styles.container}>
-      <form
-        className={styles.contentContainer}
-        onSubmit={onSubmit}
-        ref={formRef}
-      >
+      <form className={styles.contentContainer} onSubmit={onSubmit} ref={formRef}>
         <LogoIcon />
         <div className={styles.headTextContainer}>
           <h1 className={styles.header}>Welcome Back</h1>
-          <p className={styles.headerp}>
-            Welcome back, Please enter your details
-          </p>
+          <p className={styles.headerp}>Welcome back, Please enter your details</p>
         </div>
         <div className={styles.inputContainer}>
-          <Input className={styles.input} type="email" placeholder="Email" />
-          <Input
-            className={styles.input}
-            type="password"
-            placeholder="Password"
-          />
-          <p className="text-red-500 font-semibold">{error}</p>
+          <Input className={styles.input} type="email" name="email" placeholder="Email" />
+          <Input className={styles.input} type="password" name="password" placeholder="Password" />
           <Button className={styles.button} type="submit">
             Log in
           </Button>
         </div>
         <div className={styles.bottomTextContainer}>
-          <p>Don’t have account?</p>
+          <p>Don’t have an account?</p>
           <Button
             className={styles.routerButton}
             onClick={() => router.push('/sign-up')}

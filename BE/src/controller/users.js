@@ -35,17 +35,21 @@ export const users = async (req, res) => {
   }
 };
 
-export const getUserByEmail = async (req, res) => {
-  const { email } = req.body;
+
+export const getUserByEmail = async (email) => {
   const tableQueryText = `
-  SELECT * from users
-  WHERE email = $1 
+    SELECT * FROM users
+    WHERE email = $1
   `;
   try {
-    const users = await db.query(tableQueryText, [email]);
-    return users.rows;
+    const result = await db.query(tableQueryText, [email]);
+    if (result.rows.length > 0) {
+      return result.rows[0];
+    } else {
+      return null;
+    }
   } catch (error) {
-    return res.send(error);
+    throw error;
   }
 };
 export const filterUser = async (req, res) => {
