@@ -26,10 +26,8 @@ const SigninPage = () => {
     event.preventDefault();
     const formData = new FormData(formRef.current);
     const { email, password } = Object.fromEntries(formData);
-    console.log(email, password);
     try {
       const response = await axios.post('http://localhost:8000/api/login', { email, password });
-      console.log(response);
       localStorage.setItem('user', JSON.stringify(response.data.user));
       router.push('/dashboard');
     } catch (error) {

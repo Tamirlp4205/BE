@@ -17,7 +17,7 @@ import axios from 'axios';
 export const Cards = () => {
   const [chartData, setChartData] = useState([]);
   const [balance, setBalance] = useState(0);
-  const [percent, setPercent] = useState(0);
+  // const [percent, setPercent] = useState(0);
   const [totalIncome, setTotalIncome] = useState(0);
   const [totalExpense, setTotalExpense] = useState(0);
 
@@ -26,15 +26,12 @@ export const Cards = () => {
       const id = JSON.parse(localStorage.getItem('user')).id;
       const res = await axios.get(`http://localhost:8000/record/${id}/getbalance`);
       const data = res.data;
-
       const income = data.reduce((sum, record) => sum + record.income, 0);
       const expense = data.reduce((sum, record) => sum + record.expense, 0);
-
       const calculatedBalance = income - expense;
-      const IncomePercent = data.reduce()
-
+      // const IncomePercent = data.reduce()
       setBalance(calculatedBalance);
-      setPercent(calculatedPercent);
+      // setPercent(calculatedPercent);
       setTotalIncome(income);
       setTotalExpense(expense);
       setChartData(data);
@@ -81,7 +78,7 @@ export const Cards = () => {
         <CardFooter className="flex gap-2">
           {balance >= 0 ? <CircleArrowUp /> : <CircleArrowDown />}
           <p className="text-[18px] leading-7">
-            {percent >= 0 ? `${Math.floor(percent)}% from last month` : `${Math.abs(percent)}% less than last month`}
+            {/* {percent >= 0 ? `${Math.floor(percent)}% from last month` : `${Math.abs(percent)}% less than last month`} */}
           </p>
         </CardFooter>
       </Card>
@@ -100,7 +97,7 @@ export const Cards = () => {
         <CardFooter className="flex gap-2">
           {balance >= 0 ? <CircleArrowDown /> : <CircleArrowUp />}
           <p className="text-[18px] leading-7">
-            {percent >= 0 ? `${Math.floor(percent)}% from last month` : `${Math.abs(percent)}% less than last month`}
+            {/* {percent >= 0 ? `${Math.floor(percent)}% from last month` : `${Math.abs(percent)}% less than last month`} */}
           </p>
         </CardFooter>
       </Card>

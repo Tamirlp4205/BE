@@ -26,6 +26,60 @@ export const records = async (req,res)=>{
   }
 }
 
+export const getListData = async (req, res) => {
+  const { id } = req.params;
+  const queryText = "SELECT * FROM records WHERE user_id = $1";
+
+  try {
+    const result = await db.query(queryText, [id]);
+    const records = result.rows; 
+    const response = records.map(record => {
+      return {
+        name : record.name,
+        amount: record.amount,
+        createdat: record.createdat ,
+        transaction : record.transaction_type
+      };
+    });
+    res.send(response);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server Error');
+  }
+};
+
+export const getRecListdata = async (req, res) => {
+  const { id } = req.params;
+  const queryText = "SELECT * FROM records WHERE user_id = $1";
+  try {
+    const result = await db.query(queryText, [id]);
+    const groupedData = _.groupBy(result.rows, (el) => {
+      const date = new Date(el.createdat);
+      return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+    });
+    const response = _.map(groupedData, (dayRecords, date) => {
+      const totalAmount = dayRecords.reduce(
+        (acc, record) => {
+          if (record.transaction_type === "INC") {
+            acc.income += record.amount;
+          } else {
+            acc.expense += record.amount;
+          }
+          return acc;
+        },
+        { income: 0, expense: 0 }
+      );
+
+      return { date, ...totalAmount };
+    });
+
+    res.send(response);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
 
 export const getBarChartData = async (req, res) => {
   const{id}=req.params;

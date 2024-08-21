@@ -32,9 +32,9 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="grid grid-cols-2 w-full h-screen">
+    <div className="grid w-full h-screen grid-cols-2">
       <form
-        className="flex flex-col justify-center items-center gap-10"
+        className="flex flex-col items-center justify-center gap-10"
         onSubmit={onSubmit}
         ref={formRef}
       >
