@@ -25,6 +25,21 @@ export const records = async (req,res)=>{
         return res.send(error)
   }
 }
+export const RecordPieChart = async (req, res) => {
+  const { id } = req.params;
+  const tableQueryText = `
+   SELECT records.*, category.name AS categoryName
+   FROM records
+   INNER JOIN category ON records.category_id = category.id
+   WHERE user_id = $1 AND transaction_type = 'EXP'
+  `;
+  try {
+    const users = await db.query(tableQueryText, [id]);
+    return res.send(users.rows);
+  } catch (error) {
+    return res.send(error);
+  }
+};
 
 export const getListData = async (req, res) => {
   const { id } = req.params;
@@ -142,19 +157,24 @@ export const getBalance = async (req, res) => {
     console.error(error);
   }
 };
-export const Record = async (req,res)=>{
-      const {id}=req.params
-   const tableQueryText = `
-   SELECT * from records
-   WHERE id = $1
+export const Record = async (req, res) => {
+  const { id } = req.params;
+  const tableQueryText = `
+    SELECT * FROM records
+    WHERE id = $1
   `;
   try {
-    const users = await db.query(tableQueryText,[id])
-    return res.send(users.rows)
+    const result = await db.query(tableQueryText, [id]);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Not found' });
+    }
+    return res.status(200).json(result.rows);
   } catch (error) {
-        return res.send(error)
+    console.error('Error fetching record:', error);
+    return res.status(500).json({ message: 'Internal server error' });
   }
-}
+};
+
 export const recordUpdate = async (req,res)=>{
   const {id}=req.params
   const {name, amount ,transaction_type, description}=req.body
