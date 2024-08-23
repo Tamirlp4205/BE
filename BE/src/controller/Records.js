@@ -160,18 +160,14 @@ export const getBalance = async (req, res) => {
 export const Record = async (req, res) => {
   const { id } = req.params;
   const tableQueryText = `
-    SELECT * FROM records
-    WHERE id = $1
+   SELECT * from records
+   WHERE user_id = $1
   `;
   try {
-    const result = await db.query(tableQueryText, [id]);
-    if (result.rows.length === 0) {
-      return res.status(404).json({ message: 'Not found' });
-    }
-    return res.status(200).json(result.rows);
+    const users = await db.query(tableQueryText, [id]);
+    return res.send(users.rows);
   } catch (error) {
-    console.error('Error fetching record:', error);
-    return res.status(500).json({ message: 'Internal server error' });
+    return res.send(error);
   }
 };
 
