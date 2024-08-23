@@ -15,53 +15,39 @@ import { useEffect, useState } from 'react';
 import _ from 'lodash';
 
 const chartConfig = {
-  expense: {
-    label: 'Visitors',
-    color: '#F2901C' // Color for 'expense'
+  amount: {
+    label: "amount",
   },
-  chrome: {
-    label: 'Food & Drinks',
-    color: '#F2901C' // Color for 'chrome'
+  Life: {
+    label: "Lifetftf",
+    color: "#84CC16",
   },
-  others: {
-    label: 'Others',
-    color: '#0166FF' // Color for 'others'
-  },
-  safari: {
-    label: 'Shopping',
-    color: '#E74694' // Color for 'safari'
-  },
-  firefox: {
-    label: 'Housing',
-    color: '#FDBA8C' // Color for 'firefox'
-  },
-  edge: {
-    label: 'Vehicle',
-    color: '#16BDCA' // Color for 'edge'
+  FoodDrinks: {
+    label: "Food & Drinks",
+    color: "#F97316",
   },
 };
-
 export const PieDashboardChart = ({ getPieChartData }) => {
   const [pieChartData, setPieChartData] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
-
   useEffect(() => {
     const result = _.groupBy(getPieChartData, (el) => el.categoryname);
     const response = _.map(result, (records) => {
       const totalAmountForCategory = records.reduce((acc, el) => acc + el.amount, 0);
-      return { categoryname: records[0].categoryname, amount: totalAmountForCategory };
+      return {
+        categoryname: records[0].categoryname,
+        amount: totalAmountForCategory,
+        fill: `var(--color-${records[0].categoryname}) `,
+      };
     });
-
     const total = _.sumBy(response, 'amount');
     setTotalAmount(total);
     setPieChartData(response);
   }, [getPieChartData]);
-
   const getPercentage = (amount) => {
     if (totalAmount === 0) return '0%';
     return `${((amount / totalAmount) * 100).toFixed(2)}%`;
   };
-
   return (
     <Card className="flex flex-col h-[284px]">
       <CardHeader className="items-start px-8 py-4 border-b-[1px]">
@@ -75,7 +61,7 @@ export const PieDashboardChart = ({ getPieChartData }) => {
                 <div className="flex items-center gap-2">
                   <div
                     className="w-3 h-3 rounded-full"
-                    style={{ backgroundColor: chartConfig[el.categoryname]?.color || '#ccc' }}
+                    style={{ backgroundColor: el.fill }}
                   ></div>
                   <p>{el.categoryname}</p>
                 </div>
@@ -100,7 +86,6 @@ export const PieDashboardChart = ({ getPieChartData }) => {
               nameKey="categoryname"
               innerRadius={50}
               strokeWidth={5}
-              fill={(entry) => chartConfig[entry.name]?.color || '#ccc'}
             >
               <Label
                 content={({ viewBox }) => {
@@ -117,14 +102,14 @@ export const PieDashboardChart = ({ getPieChartData }) => {
                           y={viewBox.cy}
                           className="text-3xl font-bold fill-foreground"
                         >
-                          {pieChartData.find((d) => d.categoryname === viewBox.cx)?.amount}
+                          {totalAmount}
                         </tspan>
                         <tspan
                           x={viewBox.cx}
                           y={(viewBox.cy || 0) + 24}
                           className="fill-muted-foreground"
                         >
-                          {pieChartData.find((d) => d.categoryname === viewBox.cx)?.amount}
+                          Total
                         </tspan>
                       </text>
                     );

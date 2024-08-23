@@ -20,7 +20,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Input } from './ui/input';
-import { DatePicker } from './DatePicker';
+import { DatePicker } from './Date';
 import axios from 'axios';
 const styles = {
   button1default:
@@ -60,7 +60,7 @@ export const RecordAlertDialog = () => {
   const handlerClick = async () => {
     let user = localStorage.getItem('user');
     const data = JSON.parse(user);
-    const userId = data.user.id;
+    const userId = data.id;
     console.log(formRef);
     await axios.post('http://localhost:8000/record/create', {
       user_id: userId,
@@ -81,12 +81,12 @@ export const RecordAlertDialog = () => {
       <AlertDialogContent className="min-w-[744px] h-fit p-0">
         <AlertDialogHeader className="border-b-[1px] px-6 py-5 flex flex-row justify-between items-center">
           <AlertDialogTitle>Add Record</AlertDialogTitle>
-          <AlertDialogCancel className="border-0 p-0 items-start hover:bg-white">
+          <AlertDialogCancel className="items-start p-0 border-0 hover:bg-white">
             <X />
           </AlertDialogCancel>
         </AlertDialogHeader>
         <div className="grid grid-cols-2">
-          <div className="p-6 pt-5 flex flex-col gap-5">
+          <div className="flex flex-col gap-5 p-6 pt-5">
             <div className="flex bg-[#F3F4F6] rounded-[20px]">
               <Button className={buttonStyles} onClick={buttonHandler}>
                 Expense
@@ -120,7 +120,7 @@ export const RecordAlertDialog = () => {
               <div className="flex flex-col gap-8">
                 <div>
                   <h1>Date</h1>
-                  <div className="grid grid-cols-2 w-full">
+                  <div className="grid w-full grid-cols-2">
                     <DatePicker />
                     {/* <TimePicker /> */}
                   </div>
@@ -138,7 +138,7 @@ export const RecordAlertDialog = () => {
               Add Record
             </AlertDialogAction>
           </div>
-          <form ref={formRef2} className="p-6 pt-3 flex flex-col">
+          <form ref={formRef2} className="flex flex-col p-6 pt-3">
             <div>
               <h1>Payee</h1>
               <Input className="bg-[#F3F4F6] border-[#D1D5DB] text-[#171717] mt-1 mb-5 " />

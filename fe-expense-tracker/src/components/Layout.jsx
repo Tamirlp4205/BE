@@ -1,7 +1,6 @@
 import DashboardLogo from './icon/DashboardLogo';
-import Image from 'next/image';
 import Link from 'next/link';
-import { RecordAlertDialog } from './RecordAlertDialog';
+import { RecordAlertDialog } from './RecordDialog';
 import { useEffect, useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { User } from 'lucide-react';
