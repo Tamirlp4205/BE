@@ -25,12 +25,10 @@ const SignupPage = () => {
           pathname: '/sign-up-step',
           query: { id: data.id },
         });
+        localStorage.setItem('user', JSON.stringify(data));
       }
     } catch (error) {
       console.error('Error during signup:', error);
-    }
-    if (data) {
-      localStorage.setItem('user', JSON.stringify(data));
     }
   };
 
@@ -54,7 +52,7 @@ const SignupPage = () => {
           <Input className="p-4 bg-[#F3F4F6] text-[#A3A3A3] h-12" type="text" placeholder="Name" />
           <Input className="p-4 bg-[#F3F4F6] text-[#A3A3A3] h-12" type="email" placeholder="Email" />
           <Input className="p-4 bg-[#F3F4F6] text-[#A3A3A3] h-12" type="password" placeholder="Password" />
-          <Button type="submit" className="bg-[#0166FF] text-white h-12" onSubmit={onSubmit}>
+          <Button type="submit" className="bg-[#0166FF] text-white h-12">
             Sign up
           </Button>
         </div>
@@ -69,7 +67,5 @@ const SignupPage = () => {
     </div>
   );
 };
-
-
 
 export default SignupPage;

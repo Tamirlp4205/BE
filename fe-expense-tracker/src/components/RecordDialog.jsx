@@ -61,7 +61,6 @@ export const RecordAlertDialog = () => {
     let user = localStorage.getItem('user');
     const data = JSON.parse(user);
     const userId = data.id;
-    console.log(formRef);
     await axios.post('http://localhost:8000/record/create', {
       user_id: userId,
       name: formRef2.current[0].value,
@@ -81,7 +80,7 @@ export const RecordAlertDialog = () => {
       <AlertDialogContent className="min-w-[744px] h-fit p-0">
         <AlertDialogHeader className="border-b-[1px] px-6 py-5 flex flex-row justify-between items-center">
           <AlertDialogTitle>Add Record</AlertDialogTitle>
-          <AlertDialogCancel className="items-start p-0 border-0 hover:bg-white">
+          <AlertDialogCancel className="items-start p-0 border-0 hover:bg-white"> .       
             <X />
           </AlertDialogCancel>
         </AlertDialogHeader>

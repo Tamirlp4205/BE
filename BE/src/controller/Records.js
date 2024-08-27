@@ -159,24 +159,26 @@ export const getBalance = async (req, res) => {
 };
 
 
-
 export const Record = async (req, res) => {
+  const {id} = req.params
   const queryText = `
     SELECT 
-      category.name AS categoryName,
-      records.transaction_type AS transactionType,
-      SUM(records.amount) AS totalAmount,
-      MIN(records.createdat) AS createdAt -- Or MAX(records.createdat) for the latest date
-    FROM records
-    INNER JOIN category ON records.category_id = category.id
-    GROUP BY category.name, records.transaction_type;
+  category.name AS categoryName,
+  records.transaction_type AS transactionType,
+  SUM(records.amount) AS totalAmount,
+  MIN(records.createdat) AS createdAt
+FROM records
+INNER JOIN category ON records.category_id = category.id
+WHERE records.user_id = $1
+GROUP BY category.name, records.transaction_type;
+
   `;
   try {
-    const result = await db.query(queryText);
-
+    const result = await db.query(queryText,[id]);
     res.status(200).json(result.rows);
   } catch (error) {
-    handleError(res, error);
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
   }
 };
 

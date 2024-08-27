@@ -10,7 +10,15 @@ const styles = {
 };
 
 export const RecordColumn = ({ recordData, currency }) => {
-  const sum = recordData ? _.sumBy(recordData, 'totalamount') : 0;
+  const sum = recordData ? recordData.reduce((acc, record) => {
+    if (record.transactiontype === 'INC') {
+      return acc + record.totalamount;
+    } else if (record.transactiontype === 'EXP') {
+      return acc - record.totalamount;
+    } else {
+      return acc; 
+    }
+  }, 0) : 0;
   const hoursAgo = (createdAt) => {
     const now = new Date();
     const createdDate = new Date(createdAt);

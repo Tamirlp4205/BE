@@ -11,10 +11,7 @@ const Dashboard = () => {
   useEffect(() => {
     let user = localStorage.getItem('user');
     const data = JSON.parse(user);
-    console.log(data);
-    
     const userId = data.id;
-
     axios
       .get(`http://localhost:8000/record/${userId}/recordPieChart`)
       .then((resp) => setGetPieChartData(resp.data));
@@ -22,7 +19,6 @@ const Dashboard = () => {
   return (
     <div className='flex flex-col gap-10'>
       <Cards />
-
       <div className="grid grid-cols-2 gap-6 h-[284px]">
         <Chart />
         <PieDashboardChart getPieChartData={getPieChartData}/>
