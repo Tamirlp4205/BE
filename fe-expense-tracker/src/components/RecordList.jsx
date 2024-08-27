@@ -10,7 +10,8 @@ export const RecordList = () => {
       const id = JSON.parse(localStorage.getItem('user')).id;
       const res = await axios.get(`http://localhost:8000/record/${id}/getlistdata`);
       const data = res.data;
-      setRecords(data.slice(0, 5));
+      const length = data.length    
+      setRecords(data.slice(length-5, length));
     } catch (error) {
       console.error('Error fetching data:', error);
     }

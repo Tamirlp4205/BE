@@ -29,6 +29,9 @@ const SignupPage = () => {
     } catch (error) {
       console.error('Error during signup:', error);
     }
+    if (data) {
+      localStorage.setItem('user', JSON.stringify(data));
+    }
   };
 
   return (

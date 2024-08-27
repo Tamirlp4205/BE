@@ -9,8 +9,6 @@ VALUES ($1,$2,$3) RETURNING *
   try {
     await db.query(tableQueryText, [name, description, category_image]);
   } catch (error) {
-
-    console.log(process.env.NEONDB_CONNECTION_STRING)
     return res.send(error);
   }
   return res.send("CREATE CATEGORY");

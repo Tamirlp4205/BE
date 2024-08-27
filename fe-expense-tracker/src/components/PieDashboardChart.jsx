@@ -19,13 +19,21 @@ const chartConfig = {
     label: "amount",
   },
   Life: {
-    label: "Lifetftf",
+    label: "Life",
     color: "#84CC16",
   },
   FoodDrinks: {
     label: "Food & Drinks",
     color: "#F97316",
   },
+  Vehicle :{
+    label : "Vehicle",
+    color : "#c93a35"
+  },
+  Shopping :{
+    label : "Vehicle",
+    color : "#ff7d7d"
+  }
 };
 export const PieDashboardChart = ({ getPieChartData }) => {
   const [pieChartData, setPieChartData] = useState([]);

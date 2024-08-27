@@ -9,9 +9,15 @@ const styles = {
     'flex justify-between items-center h-[40px] py-[20px] mx-6 border-b-[1px] last:border-0',
 };
 
-export const RecordColumn = ({ recordData, currency, transType }) => {
-  const sum = recordData ? _.sumBy(recordData, 'amount') : 0;
-
+export const RecordColumn = ({ recordData, currency }) => {
+  const sum = recordData ? _.sumBy(recordData, 'totalamount') : 0;
+  const hoursAgo = (createdAt) => {
+    const now = new Date();
+    const createdDate = new Date(createdAt);
+    const diffInMs = now - createdDate;
+    const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+    return diffInHours;
+  };
   return (
     <div className="flex flex-col gap-6">
       <div className="w-full h-fit py-3 px-6 rounded-[12px] border-[1px] flex items-center justify-between bg-white">
@@ -29,19 +35,18 @@ export const RecordColumn = ({ recordData, currency, transType }) => {
                   <div className="flex items-center gap-4">
                     <ListLogo />
                     <div className="flex flex-col gap-1">
-                      <h1 className="text-[#000] font-semibold">{el.name}</h1>
-                      <p className="text-[12px] leading-4 text-[#6B7280]">
-                        {el.updatedAt} hours Ago
-                      </p>
+                      <h1 className="text-[#000] font-semibold">{el.categoryname}</h1>
+                      <p>{hoursAgo(el.createdat)} hours ago</p>
                     </div>
                   </div>
                   <p
                     className={
-                      el.transaction_type === 'INC' ? styles.transTypeInc : styles.transTypeExp
+                      el.transactiontype === 'INC' ? styles.transTypeInc : styles.transTypeExp
                     }
                   >
-                    {el.transaction_type === 'INC' ? '+' : '-'}
-                    {el.amount}
+                    {el.transactiontype === 'INC' ? '+' : '-'}
+                    {el.totalamount}
+                    {el.transactiontype === 'INC' ? el.income : el.expense}
                     {currency === 'USD' ? '$' : '₮'}
                   </p>
                 </div>

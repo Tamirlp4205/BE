@@ -157,19 +157,31 @@ export const getBalance = async (req, res) => {
     console.error(error);
   }
 };
+
+
+
 export const Record = async (req, res) => {
-  const { id } = req.params;
-  const tableQueryText = `
-   SELECT * from records
-   WHERE user_id = $1
+  const queryText = `
+    SELECT 
+      category.name AS categoryName,
+      records.transaction_type AS transactionType,
+      SUM(records.amount) AS totalAmount,
+      MIN(records.createdat) AS createdAt -- Or MAX(records.createdat) for the latest date
+    FROM records
+    INNER JOIN category ON records.category_id = category.id
+    GROUP BY category.name, records.transaction_type;
   `;
   try {
-    const users = await db.query(tableQueryText, [id]);
-    return res.send(users.rows);
+    const result = await db.query(queryText);
+
+    res.status(200).json(result.rows);
   } catch (error) {
-    return res.send(error);
+    handleError(res, error);
   }
 };
+
+
+
 
 export const recordUpdate = async (req,res)=>{
   const {id}=req.params

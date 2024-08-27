@@ -1,5 +1,5 @@
 import Cards from '@/components/Cards';
-import { Chart } from '@/components/Chart';
+import { Chart } from '@/components/Chart'
 import Layout from '@/components/Layout';
 import { PieDashboardChart } from '@/components/PieDashboardChart';
 import RecordList from '@/components/RecordList';
@@ -20,7 +20,7 @@ const Dashboard = () => {
       .then((resp) => setGetPieChartData(resp.data));
   }, []);
   return (
-    <Layout>
+    <div className='flex flex-col gap-10'>
       <Cards />
 
       <div className="grid grid-cols-2 gap-6 h-[284px]">
@@ -33,7 +33,7 @@ const Dashboard = () => {
         </div>
         <RecordList />
       </div>
-    </Layout>
+    </div>
   );
 };
 
